@@ -1,0 +1,16 @@
+fastapi
+uvicorn
+python-dotenv
+requests
+beautifulsoup4
+sentence-transformers
+faiss-cpu
+numpy
+pydantic
+rank-bm25
+groq
+scikit-learn
+pytest
+httpx
+python-multipart
+pickle-mixin
