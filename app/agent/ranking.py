@@ -46,7 +46,7 @@ def rerank_results(results, constraints):
         # ---------------- FINAL SAFE OUTPUT ----------------
         item["score"] = score
 
-        # 🔥 CRITICAL FIX: NEVER LOSE URL
+        # CRITICAL FIX: NEVER LOSE URL
         if not item.get("url"):
             item["url"] = item.get("link", "")
 

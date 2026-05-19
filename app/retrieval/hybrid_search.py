@@ -18,14 +18,14 @@ ABSOLUTE_CATALOG_PATH = os.path.join(project_root, "data", "shl_catalog.json")
 
 if os.path.exists(ABSOLUTE_CATALOG_PATH):
     try:
-        # 🔥 THE CRITICAL FIX: strict=False ignores malformed control characters on line 4795
+        #  THE CRITICAL FIX: strict=False ignores malformed control characters on line 4795
         with open(ABSOLUTE_CATALOG_PATH, "r", encoding="utf-8") as f:
             catalog = json.loads(f.read(), strict=False)
             
     except Exception as e:
-        print(f"⚠️ Error parsing catalog file: {e}")
+        print(f" Error parsing catalog file: {e}")
 else:
-    print(f"⚠️ Warning: shl_catalog.json could not be located at absolute path: {ABSOLUTE_CATALOG_PATH}")
+    print(f" Warning: shl_catalog.json could not be located at absolute path: {ABSOLUTE_CATALOG_PATH}")
 
 
 def hybrid_search(query: str, top_k: int = 10) -> list:
@@ -56,7 +56,7 @@ def hybrid_search(query: str, top_k: int = 10) -> list:
             f"{name} {description} {test_type} {' '.join(job_levels)}"
         ).lower()
 
-        # 3. 🔥 THE CORRECTION: Calculate scores inside the loop before appending
+        # 3.  THE CORRECTION: Calculate scores inside the loop before appending
         fuzzy_score = fuzz.partial_ratio(query, combined_text)
         overlap_score = sum(
             15 for token in query.split()
@@ -91,13 +91,13 @@ if __name__ == "__main__":
     print("=" * 60)
     print("SHL RECOMENDER - HYBRID SEARCH ENGINE TEST SUITE")
     print("=" * 60)
-    print(f"📍 Execution Base Location Resolve: {os.getcwd()}")
-    print(f"📊 Catalog Records Loaded: {len(catalog)}")
+    print(f" Execution Base Location Resolve: {os.getcwd()}")
+    print(f" Catalog Records Loaded: {len(catalog)}")
     print("-" * 60)
 
     # 1. Test search matching capabilities
     test_query = "Java developer stakeholder communication"
-    print(f"🔍 Running Search Test for Query: '{test_query}'")
+    print(f" Running Search Test for Query: '{test_query}'")
     
     search_matches = hybrid_search(test_query, top_k=3)
     
@@ -113,7 +113,7 @@ if __name__ == "__main__":
 
     # 2. Inspect raw data entries specifically for anomalies
     target_assessment = "Business Communication (adaptive)"
-    print(f"🕵️ Target Entry Metadata Deep-Dive: '{target_assessment}'")
+    print(f" Target Entry Metadata Deep-Dive: '{target_assessment}'")
     
     db_matches = [item for item in catalog if item.get("name") == target_assessment]
     if db_matches:
@@ -123,5 +123,5 @@ if __name__ == "__main__":
         print(f"  • Raw Duration Value: {repr(raw_item.get('duration'))}")
         print(f"  • Raw Job Levels List: {repr(raw_item.get('job_levels'))}")
     else:
-        print(f"  ❌ Failed to locate target record '{target_assessment}' in database.")
+        print(f" Failed to locate target record '{target_assessment}' in database.")
     print("=" * 60)

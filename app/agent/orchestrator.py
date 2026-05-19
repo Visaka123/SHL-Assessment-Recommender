@@ -99,7 +99,7 @@ Analyze the entire conversation log and determine which of the behavioral intent
 4. "COMPARE": The user explicitly requests a cross-comparison or distinction breakdown between specific assessments (e.g., "What is the difference between X and Y?").
 5. "COMPLETE": The user is confirming, expressing satisfaction, validating the choices, or finalizing the conversation thread (e.g., "Perfect", "That works", "Great selection", "Looks good, let's go with these").
 
-⚠️ STATE RETENTION RULE: If the user is expressing confirmation, satisfaction, or finalizing the conversation, you should maintain the context of the last recommended items. Ensure you populate the 'selected_assessment_names' array with the exact same assessment names discussed or chosen in the immediate history context.
+ STATE RETENTION RULE: If the user is expressing confirmation, satisfaction, or finalizing the conversation, you should maintain the context of the last recommended items. Ensure you populate the 'selected_assessment_names' array with the exact same assessment names discussed or chosen in the immediate history context.
 
 Grounded Context from Scraped Catalog:
 {grounded_catalog_context}
@@ -140,7 +140,7 @@ You must output a single, tightly-formed JSON string matching this exact schema:
             for w in ["perfect", "works", "thank", "ideal", "need", "great", "excellent", "awesome", "good", "yes", "confirm", "suit"]
         )
 
-        # 🔥 ULTRA-RESILIENT ARTIFACT PRESERVATION GUARD:
+        #  ULTRA-RESILIENT ARTIFACT PRESERVATION GUARD:
         # If confirming/concluding but the LLM cleared the selection array, scrape historical entries
         if is_confirming and not selected_names:
             for msg in reversed(messages):
@@ -187,7 +187,7 @@ You must output a single, tightly-formed JSON string matching this exact schema:
 
     except Exception as e:
         # Graceful absolute fallback containment layer
-        print(f"⚠️ Orchestrator Engine Routing Intercept Reset: {e}")
+        print(f"Orchestrator Engine Routing Intercept Reset: {e}")
         return {
             "reply": "I am reviewing your parameters against our active SHL profiles. Could you clarify your target role seniority or skill domains?",
             "recommendations": [],

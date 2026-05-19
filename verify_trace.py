@@ -1,12 +1,13 @@
-import asyncio
-import json
-from app.agent.orchestrator import handle_chat
-from app.models.api_models import Message
+import time
+import requests
 
-async def run_sample_trace():
+def run_live_render_trace():
     print("=" * 75)
-    print("🤖 RUNNING AUTOMATED TRACE SIMULATION (SENIOR LEADERSHIP)")
+    print("RUNNING LIVE CLOUD TRACE SIMULATION (SENIOR LEADERSHIP)")
     print("=" * 75)
+
+    # Your live Render URL
+    url = "https://shl-assessment-recommender-a4ps.onrender.com/chat"
 
     # The exact multi-turn conversation inputs from the sample trace
     user_inputs = [
@@ -19,26 +20,50 @@ async def run_sample_trace():
     chat_history = []
 
     for idx, user_text in enumerate(user_inputs, 1):
-        print(f"\n👉 [TURN {idx}] User says: '{user_text}'")
+        print(f"\n[TURN {idx}] User says: '{user_text}'")
         
-        # Append latest user turn to history state
-        chat_history.append(Message(role="user", content=user_text))
+        # 1. Append latest user turn to history state
+        chat_history.append({"role": "user", "content": user_text})
         
-        # Process through your engine
-        response = await handle_chat(chat_history)
+        # 2. Package payload for the POST request
+        payload = {"messages": chat_history}
         
-        # Print output metrics
-        print(f"🤖 Agent Reply Preview: {response['reply'][:120]}...")
-        print(f"📦 Recommendations Count: {len(response['recommendations'])}")
-        print(f"🏁 End Of Conversation Flag: {response['end_of_conversation']}")
-        print("-" * 50)
-        
-        # Append assistant turn to persist conversational memory
-        chat_history.append(Message(role="assistant", content=response["reply"]))
+        # 3. Fire the live HTTP request to your Render server
+        try:
+            start_time = time.time()
+            response = requests.post(url, json=payload, timeout=30)
+            latency = time.time() - start_time
+            
+            if response.status_code != 200:
+                print(f" Error: Received HTTP {response.status_code} from server.")
+                print(f"Response content: {response.text}")
+                break
+                
+            data = response.json()
+            
+            # 4. Print output metrics returned from the cloud
+            reply_preview = data.get("reply", "")
+            clean_preview = reply_preview.split("\n|")[0][:120].strip()
+            
+            print(f"Server Latency: {latency:.2f} seconds")
+            print(f" Agent Reply Preview: {clean_preview}...")
+            print(f" Recommendations Count: {len(data.get('recommendations', []))}")
+            print(f" End Of Conversation Flag: {data.get('end_of_conversation', False)}")
+            print("-" * 50)
+            
+            # 5. Append assistant turn to persist conversational memory
+            chat_history.append({"role": "assistant", "content": data.get("reply", "")})
+            
+        except requests.exceptions.Timeout:
+            print(" Error: The request timed out (took longer than 30 seconds).")
+            break
+        except Exception as e:
+            print(f" Network Error occurred: {e}")
+            break
 
     print("\n" + "=" * 75)
-    print("✅ TEST COMPLETION: Trace ran from end-to-end smoothly.")
+    print(" TEST COMPLETION: Live cloud trace completed.")
     print("=" * 75)
 
 if __name__ == "__main__":
-    asyncio.run(run_sample_trace())
+    run_live_render_trace()

@@ -11,7 +11,7 @@ SHL_LIVE_CATALOG_URL = "https://tcp-us-prod-rnd.shl.com/voiceRater/shl-ai-hiring
 
 def stream_and_save_live_catalog():
     print("=" * 70)
-    print("🌐 RAW PACKET STREAMING: BULK SAVING SHL PRODUCTION CATALOG")
+    print(" RAW PACKET STREAMING: BULK SAVING SHL PRODUCTION CATALOG")
     print("=" * 70)
     
     headers = {
@@ -20,13 +20,13 @@ def stream_and_save_live_catalog():
     }
     
     try:
-        print(f"📥 Opening live data stream path:\n👉 {SHL_LIVE_CATALOG_URL}\n")
+        print(f" Opening live data stream path:\n{SHL_LIVE_CATALOG_URL}\n")
         
         # 1. Open the request as a raw stream chunk receiver
         response = requests.get(SHL_LIVE_CATALOG_URL, headers=headers, stream=True, timeout=30)
         
         if response.status_code != 200:
-            print(f"❌ Connection Intercept: Server responded with status code {response.status_code}")
+            print(f" Connection Intercept: Server responded with status code {response.status_code}")
             return
             
         # 2. Ensure target local storage directories are built
@@ -38,13 +38,13 @@ def stream_and_save_live_catalog():
                 if chunk: # Filter out keep-alive header packets
                     file.write(chunk)
                     
-        print("🎉 SUCCESS: Raw data stream package fully captured and stored!")
-        print(f"💾 File updated: {OUTPUT_PATH}")
-        print(f"📏 Size on Disk: {os.path.getsize(OUTPUT_PATH) / 1024:.2f} KB")
+        print(" SUCCESS: Raw data stream package fully captured and stored!")
+        print(f" File updated: {OUTPUT_PATH}")
+        print(f" Size on Disk: {os.path.getsize(OUTPUT_PATH) / 1024:.2f} KB")
         print("=" * 70)
 
     except Exception as e:
-        print(f"❌ Streaming Operation Terminated: {e}")
+        print(f" Streaming Operation Terminated: {e}")
 
 if __name__ == "__main__":
     stream_and_save_live_catalog()
